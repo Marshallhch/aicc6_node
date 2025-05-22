@@ -1,15 +1,5 @@
 const DOMAIN = 'http://localhost:8000';
 
-const routes = [
-  'sales_map',
-  'visitors',
-  'customers',
-  'target_reality',
-  'volume_services',
-  'top_products',
-  'revenue',
-];
-
 const GET_SALES_MAP_API_URL = `${DOMAIN}/sales_map`;
 const GET_VISITORS_API_URL = `${DOMAIN}/visitors`;
 const GET_CUSTOMERS_API_URL = `${DOMAIN}/customers`;
