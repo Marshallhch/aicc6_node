@@ -16,9 +16,6 @@ const Sidebar = () => {
     setCurrentMenu(idx);
   };
 
-  console.log(currentMenu);
-
-  const activate = true;
   return (
     <div
       className={`sidebar-wrapper bg-gray-950 py-5 px-4 shadow-[0_0.125rem_0.25rem_rgba(255,255,255,0.3)] lg:w-[20%] md:w-[30%] w-[50%] h-full flex flex-col rounded-sm z-[999] fixed lg:left-0 ${
@@ -54,13 +51,17 @@ const Sidebar = () => {
                   <Link
                     to={menu.path}
                     className={`flex items-center py-0.5 px-5 font-medium gap-x-[14px] h-[44px] ${
-                      activate ? 'bg-blue-700 text-white rounded-sm' : ''
+                      currentMenu === idx
+                        ? 'bg-blue-700 text-white rounded-sm'
+                        : ''
                     }`}
                     onClick={() => selectMenuHandler(idx)}
                   >
                     <span
                       className={`w-5 ${
-                        activate ? 'invert-[1] brightness-[100%]' : ''
+                        currentMenu === idx
+                          ? 'invert-[1] brightness-[100%]'
+                          : ''
                       }`}
                     >
                       <img src={menu.icon} alt={menu.alt} />
