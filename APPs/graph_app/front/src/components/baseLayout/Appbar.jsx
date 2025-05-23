@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setSidebarOpen } from '../../redux/slices/sidebarSlice';
 import AppbarLang from './AppbarLang';
 import { Icons } from '../../assets/icons';
+import AppbarProfile from './AppbarProfile';
 
 const Appbar = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,11 @@ const Appbar = () => {
             </form>
           </div>
           <AppbarLang />
-          <button className="notification"></button>
+          <button className="notification relative block rounded-md w-8 h-8">
+            <img src={Icons.NotificationOrange} alt="" className="w-6" />
+            <span className="w-2 h-2 rounded-full bg-red-600 absolute top-1 right-2"></span>
+          </button>
+          <AppbarProfile />
         </div>
       </div>
     </div>

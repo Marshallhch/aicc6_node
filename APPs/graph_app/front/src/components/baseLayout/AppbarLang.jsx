@@ -25,7 +25,7 @@ const AppbarLang = () => {
         (country) => country.name.common === DEFAULT_COUNTRY
       );
 
-      console.log(defaultCountry);
+      // console.log(defaultCountry);
 
       if (defaultCountry) {
         let langKey = Object.keys(defaultCountry?.languages)[0];
