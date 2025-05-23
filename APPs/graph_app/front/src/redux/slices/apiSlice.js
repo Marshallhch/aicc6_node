@@ -9,7 +9,12 @@
 // 리듀서를 생성해주는 기능은 없기 때문에 액션들을 처리할 로직을 직접 작성해야 한다.
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { GET_VISITORS_API_URL } from '../../constants/apiUrls';
+import {
+  GET_VISITORS_API_URL,
+  GET_REVENUE_API_URL,
+  GET_CUSTOMERS_API_URL,
+  GET_TARGET_REALITY_API_URL,
+} from '../../constants/apiUrls';
 import { getRequest } from '../../constants/methods';
 
 // 공통된 비동기 액션 생성 함수
@@ -23,6 +28,24 @@ const createFetchThunk = (actionType, apiUrl) => {
 export const fetchVisitors = createFetchThunk(
   'fetchVisitors', // action type
   GET_VISITORS_API_URL
+);
+
+// GET Revenue data
+export const fetchRevenue = createFetchThunk(
+  'fetchRevenue', // action type
+  GET_REVENUE_API_URL
+);
+
+// GET Customers data
+export const fetchCustomers = createFetchThunk(
+  'fetchCustomers', // action type
+  GET_CUSTOMERS_API_URL
+);
+
+// GET Target vs Reality data
+export const fetchTargetReality = createFetchThunk(
+  'fetchTargetReality', // action type
+  GET_TARGET_REALITY_API_URL
 );
 
 // 요청 성공 시 함수 정의
@@ -40,11 +63,23 @@ const apiSlice = createSlice({
   name: 'apis',
   initialState: {
     visitorsData: null,
+    revenueData: null,
+    customersData: null,
+    targetRealityData: null,
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchVisitors.fulfilled, handleFullfilled('visitorsData')) // 요청 성공 시
-      .addCase(fetchVisitors.rejected, handleRejected); // 요청 실패 시
+      .addCase(fetchVisitors.rejected, handleRejected) // 요청 실패 시
+      .addCase(fetchRevenue.fulfilled, handleFullfilled('revenueData'))
+      .addCase(fetchRevenue.rejected, handleRejected)
+      .addCase(fetchCustomers.fulfilled, handleFullfilled('customersData'))
+      .addCase(fetchCustomers.rejected, handleRejected)
+      .addCase(
+        fetchTargetReality.fulfilled,
+        handleFullfilled('targetRealityData')
+      )
+      .addCase(fetchTargetReality.rejected, handleRejected);
   },
 });
 
