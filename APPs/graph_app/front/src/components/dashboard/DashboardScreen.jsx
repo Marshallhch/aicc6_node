@@ -4,10 +4,13 @@ import Visitors from './Visitors';
 import Revenue from './Revenue';
 import Customers from './Customers';
 import TargetReality from './TargetReality';
+import TopProducts from './TopProducts';
+import SalesMap from './SalesMap';
+import VolumeServices from './VolumeServices';
 
 const DashboardScreen = () => {
   return (
-    <div className="contents-area lg:ml-[calc(20%+14px)] lg:w-[calc(80%-28px)] w-full mt-[14px]">
+    <div className="contents-area lg:ml-[calc(20%+14px)] lg:w-[calc(80%-28px)] w-full mt-[14px] overflow-hidden">
       <div className="area-row area-top lg:grid lg:grid-cols-[4fr_3fr] gap-[14px] mt-[14px]">
         <Sales />
         <Visitors />
@@ -16,6 +19,9 @@ const DashboardScreen = () => {
         <Revenue />
         <Customers />
         <TargetReality />
+        <TopProducts />
+        <SalesMap />
+        <VolumeServices />
       </div>
     </div>
   );
