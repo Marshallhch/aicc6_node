@@ -13,4 +13,7 @@ app.get('/', (req, res) => {
   res.send('This is the Tasks App Backend');
 });
 
+app.use(require('./routers/getRoutes'));
+app.use(require('./routers/postRoutes'));
+
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
