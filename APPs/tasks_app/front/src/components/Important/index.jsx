@@ -4,8 +4,8 @@ import ItemPanel from '../Common/ItemPanel';
 
 const index = () => {
   return (
-    <div>
-      <Navbar />
+    <div className="page_section">
+      <Navbar activeIdx={3} />
       <ItemPanel pageTitle="Important Items" />
     </div>
   );
