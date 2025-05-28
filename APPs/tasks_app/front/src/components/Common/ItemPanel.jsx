@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Item from './Item';
 import { useDispatch, useSelector } from 'react-redux';
 import AddItem from './AddItem';
 import PageTitle from './PageTitle';
 import { fetchGetItems } from '../../redux/slices/apiSlice';
+import { SkeletonTheme } from 'react-loading-skeleton';
+import LoadingSkeleton from './LoadingSkeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const ItemPanel = ({ pageTitle }) => {
   // Auth Data Variables
@@ -15,30 +18,54 @@ const ItemPanel = ({ pageTitle }) => {
   const getTasksData = useSelector((state) => state.api.getItemsData);
   const dispatch = useDispatch();
 
+  // loading state
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!userKey) return;
 
     const fetchGetItemsData = async () => {
       try {
+        setLoading(true);
         // useEffect 내부에서 dispatch 함수를 호출할 때는 async/await를 사용할 수 없을때 unwrap()을 사용;
         await dispatch(fetchGetItems(userKey)).unwrap();
       } catch (error) {
         console.log('Fail to fetch items', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchGetItemsData();
   }, [dispatch, userKey]);
 
-  console.log(getTasksData);
+  // console.log(getTasksData);
   return (
     <div className="panel bg-[#212121] w-4/5 h-full rounded-md border border-gray-500 py-5 px-4 overflow-y-auto">
       {userKey ? (
         <div className="login-message w-full h-full">
           <PageTitle title={pageTitle} />
           <div className="flex flex-wrap">
-            {getTasksData?.map((task, idx) => (
+            {/* {getTasksData?.map((task, idx) => (
               <Item key={idx} task={task} />
-            ))}
+            ))} */}
+
+            {loading ? (
+              <SkeletonTheme
+                baseColor="#202020"
+                highlightColor="#444"
+                height="25vh"
+              >
+                {/* {[...Array(getTasksData?.length)].map((_, idx) => (
+                  <LoadingSkeleton key={idx} />
+                ))} */}
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+                <LoadingSkeleton />
+              </SkeletonTheme>
+            ) : (
+              getTasksData?.map((task, idx) => <Item key={idx} task={task} />)
+            )}
+
             <AddItem />
           </div>
         </div>
