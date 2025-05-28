@@ -6,7 +6,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/slices/authSlice';
+import { login, logout } from '../../redux/slices/authSlice';
 
 const Navbar = () => {
   const path = useLocation();
@@ -23,12 +23,18 @@ const Navbar = () => {
       try {
         const decoded = jwtDecode(credentialResponse.credential);
         dispatch(login({ authData: decoded }));
+        setIsAuth(true);
       } catch (error) {
         console.error('Google Login Error', error);
       }
     },
     [dispatch]
   );
+
+  const handleLogoutClick = () => {
+    dispatch(logout());
+    setIsAuth(false);
+  };
 
   // useEffect(() => {
   //   const storedAuthData = JSON.parse(localStorage.getItem('authData'));
@@ -60,18 +66,31 @@ const Navbar = () => {
           </li>
         ))}
       </ul>
-      <div className="auth-wrapper flex justify-center w-4/5">
-        <GoogleOAuthProvider clientId={googleClientId}>
-          <GoogleLogin
-            onSuccess={handleLoginSuccess}
-            onError={handleLoginError}
-          />
-          <button className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full">
-            <FcGoogle />
-            <span className="text-sm">Google Login</span>
+
+      {isAuth ? (
+        <div className="w-4/5 flex items-center">
+          <button
+            className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full"
+            onClick={handleLogoutClick}
+          >
+            <FcGoogle className="w-5 h-5" />
+            <span className="text-sm">{name}님 로그아웃</span>
           </button>
-        </GoogleOAuthProvider>
-      </div>
+        </div>
+      ) : (
+        <div className="auth-wrapper flex justify-center w-4/5 login-btn">
+          <GoogleOAuthProvider clientId={googleClientId}>
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={handleLoginError}
+            />
+            <button className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full">
+              <FcGoogle className="w-5 h-5" />
+              <span className="text-sm">Google Login</span>
+            </button>
+          </GoogleOAuthProvider>
+        </div>
+      )}
     </nav>
   );
 };
