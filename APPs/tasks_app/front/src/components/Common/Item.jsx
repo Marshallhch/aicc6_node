@@ -2,7 +2,8 @@ import React from 'react';
 import { MdEditDocument } from 'react-icons/md';
 import { FaTrash } from 'react-icons/fa';
 
-const Item = () => {
+const Item = ({ task }) => {
+  console.log(task);
   const description =
     '투두 앱 프론트 만들고 백엔드 엔드포인트 연결하고, 데이터 베이스 구조도 짜야 함.';
 

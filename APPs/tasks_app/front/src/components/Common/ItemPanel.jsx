@@ -36,8 +36,9 @@ const ItemPanel = ({ pageTitle }) => {
         <div className="login-message w-full h-full">
           <PageTitle title={pageTitle} />
           <div className="flex flex-wrap">
-            <Item />
-            <Item />
+            {getTasksData?.map((task, idx) => (
+              <Item key={idx} task={task} />
+            ))}
             <AddItem />
           </div>
         </div>
