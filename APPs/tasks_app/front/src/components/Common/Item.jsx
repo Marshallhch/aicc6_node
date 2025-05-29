@@ -7,6 +7,7 @@ import {
   fetchGetItems,
   fetchUpdateCompleted,
 } from '../../redux/slices/apiSlice';
+import { openModal } from '../../redux/slices/modalSlice';
 
 const Item = ({ task }) => {
   // console.log(task);
@@ -62,13 +63,24 @@ const Item = ({ task }) => {
     }
     return text;
   };
+
+  const handleDetailOpenModal = () => {
+    dispatch(openModal({ modalType: 'details' }));
+  };
+
+  const handleEditOpenModal = () => {
+    dispatch(openModal({ modalType: 'update' }));
+  };
   return (
     <div className="item w-1/3 h-[25vh] p-[0.25rem]">
       <div className="w-full h-full border border-gray-500 rounded-md flex py-3 px-4 flex-col justify-between bg-gray-950">
         <div className="upper">
           <h2 className="text-xl font-normal mb-3 relative pb-2 flex justify-between border-b">
             <span className=" bottom-0">{title}</span>
-            <span className="text-sm py-1 px-3 border border-gray-500 rounded-sm hover:bg-gray-700 cursor-pointer">
+            <span
+              className="text-sm py-1 px-3 border border-gray-500 rounded-sm hover:bg-gray-700 cursor-pointer"
+              onClick={handleDetailOpenModal}
+            >
               자세히
             </span>
           </h2>
@@ -103,7 +115,10 @@ const Item = ({ task }) => {
             </div>
             <div className="item-footer-right flex gap-2">
               <button>
-                <MdEditDocument className="w-5 h-5" />
+                <MdEditDocument
+                  className="w-5 h-5"
+                  onClick={handleEditOpenModal}
+                />
               </button>
               <button>
                 <FaTrash className="" />

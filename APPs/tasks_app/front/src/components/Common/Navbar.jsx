@@ -15,7 +15,7 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
   const { name } = user || {};
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(!!name);
 
   // useCallback 사용 이유: 함수 재생성 방지, 성능 최적화
   const handleLoginSuccess = useCallback(
@@ -38,7 +38,10 @@ const Navbar = () => {
 
   // useEffect(() => {
   //   const storedAuthData = JSON.parse(localStorage.getItem('authData'));
-  //   console.log(storedAuthData);
+  //   // console.log(storedAuthData);
+  //   if (storedAuthData) {
+  //     setIsAuth(true);
+  //   }
   // }, [dispatch]);
 
   const handleLoginError = (error) => {
