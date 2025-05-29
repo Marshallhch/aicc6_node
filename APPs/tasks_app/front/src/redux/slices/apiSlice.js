@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   GET_TASKS_API_URL,
+  POST_TASK_API_URL,
   UPDATE_COMPLETED_TASK_API_URL,
 } from '../../utils/apiUrl';
-import { getRequest, patchRequest } from '../../utils/requests';
+import { getRequest, patchRequest, postRequest } from '../../utils/requests';
 
 const getItemsFetchThunk = (actionType, apiUrl) => {
   return createAsyncThunk(actionType, async (userId) => {
@@ -19,6 +20,21 @@ const updateCompletedFetchThunk = (actionType, apiUrl) => {
     return await patchRequest(apiUrl, options);
   });
 };
+
+const postItemFetchThunk = (actionType, apiUrl) => {
+  return createAsyncThunk(actionType, async (postData) => {
+    // console.log(postData)
+    const options = {
+      body: JSON.stringify(postData),
+    };
+    return await postRequest(apiUrl, options);
+  });
+};
+
+export const fetchPostItem = postItemFetchThunk(
+  'fetchPostItem',
+  POST_TASK_API_URL
+);
 
 export const fetchGetItems = getItemsFetchThunk(
   'fetchGetItems',
@@ -43,6 +59,7 @@ const apiSlice = createSlice({
   initialState: {
     getItemsData: null,
     updateCompletedData: null,
+    postItemData: null,
   },
   extraReducers: (builder) => {
     builder
@@ -52,7 +69,9 @@ const apiSlice = createSlice({
         fetchUpdateCompleted.fulfilled,
         handleFulfilled('updateCompletedData')
       )
-      .addCase(fetchUpdateCompleted.rejected, handleRejected);
+      .addCase(fetchUpdateCompleted.rejected, handleRejected)
+      .addCase(fetchPostItem.fulfilled, handleFulfilled('postItemData'))
+      .addCase(fetchPostItem.rejected, handleRejected);
   },
 });
 

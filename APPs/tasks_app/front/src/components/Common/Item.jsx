@@ -65,11 +65,11 @@ const Item = ({ task }) => {
   };
 
   const handleDetailOpenModal = () => {
-    dispatch(openModal({ modalType: 'details' }));
+    dispatch(openModal({ modalType: 'details', task }));
   };
 
   const handleEditOpenModal = () => {
-    dispatch(openModal({ modalType: 'update' }));
+    dispatch(openModal({ modalType: 'update', task }));
   };
   return (
     <div className="item w-1/3 h-[25vh] p-[0.25rem]">

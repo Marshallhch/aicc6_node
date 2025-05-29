@@ -6,7 +6,7 @@ import { openModal } from '../../redux/slices/modalSlice';
 const AddItem = () => {
   const dispatch = useDispatch();
   const handleOpenModal = () => {
-    dispatch(openModal({ modalType: 'create' }));
+    dispatch(openModal({ modalType: 'create', task: null }));
   };
   return (
     <div className="add-card item w-1/3 h-[25vh] p-[0.25rem]">
