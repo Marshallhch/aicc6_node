@@ -4,12 +4,14 @@ import {
   POST_TASK_API_URL,
   UPDATE_COMPLETED_TASK_API_URL,
   UPDATE_TASK_API_URL,
+  DELETE_TASK_API_URL,
 } from '../../utils/apiUrl';
 import {
   getRequest,
   patchRequest,
   postRequest,
   putRequest,
+  deleteRequest,
 } from '../../utils/requests';
 
 const getItemsFetchThunk = (actionType, apiUrl) => {
@@ -17,6 +19,17 @@ const getItemsFetchThunk = (actionType, apiUrl) => {
     // console.log(apiUrl, userId);
     const fullPath = `${apiUrl}/${userId}`; // http://localhost:8000/get_task/118325483071000080626
     return await getRequest(fullPath);
+  });
+};
+
+const deleteItemsFetchThunk = (actionType, apiUrl) => {
+  return createAsyncThunk(actionType, async (itemId) => {
+    // console.log(apiUrl, itemId);
+    const options = {
+      method: 'DELETE',
+    };
+    const fullPath = `${apiUrl}/${itemId}`; // http://localhost:8000/get_task/118325483071000080626
+    return await deleteRequest(fullPath, options);
   });
 };
 
@@ -46,6 +59,11 @@ const putItemFetchThunk = (actionType, apiUrl) => {
     return await putRequest(apiUrl, options);
   });
 };
+
+export const fetchDeleteItem = deleteItemsFetchThunk(
+  'fetchDeleteItem',
+  DELETE_TASK_API_URL
+);
 
 export const fetchPutItem = putItemFetchThunk(
   'fetchPutItem',
@@ -82,6 +100,7 @@ const apiSlice = createSlice({
     updateCompletedData: null,
     postItemData: null,
     putItemData: null,
+    deleteItemData: null,
   },
   extraReducers: (builder) => {
     builder
@@ -95,7 +114,9 @@ const apiSlice = createSlice({
       .addCase(fetchPostItem.fulfilled, handleFulfilled('postItemData'))
       .addCase(fetchPostItem.rejected, handleRejected)
       .addCase(fetchPutItem.fulfilled, handleFulfilled('putItemData'))
-      .addCase(fetchPutItem.rejected, handleRejected);
+      .addCase(fetchPutItem.rejected, handleRejected)
+      .addCase(fetchDeleteItem.fulfilled, handleFulfilled('deleteItemData'))
+      .addCase(fetchDeleteItem.rejected, handleRejected);
   },
 });
 

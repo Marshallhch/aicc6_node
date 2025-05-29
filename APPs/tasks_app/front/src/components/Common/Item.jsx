@@ -4,6 +4,7 @@ import { FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import {
+  fetchDeleteItem,
   fetchGetItems,
   fetchUpdateCompleted,
 } from '../../redux/slices/apiSlice';
@@ -71,6 +72,27 @@ const Item = ({ task }) => {
   const handleEditOpenModal = () => {
     dispatch(openModal({ modalType: 'update', task }));
   };
+
+  const handleDeleteItem = async () => {
+    const confirm = window.confirm('정말 삭제하시겠습니까?');
+    // console.log(confirm);
+
+    if (!confirm) return;
+
+    if (!_id) {
+      toast.error('잘못된 사용자 접근입니다.');
+      return;
+    }
+
+    try {
+      await dispatch(fetchDeleteItem(_id)).unwrap();
+      toast.success('삭제가 완료되었습니다.');
+      await dispatch(fetchGetItems(userid)).unwrap();
+    } catch (error) {
+      toast.error('삭제에 실패했습니다.');
+      console.log(error);
+    }
+  };
   return (
     <div className="item w-1/3 h-[25vh] p-[0.25rem]">
       <div className="w-full h-full border border-gray-500 rounded-md flex py-3 px-4 flex-col justify-between bg-gray-950">
@@ -120,7 +142,7 @@ const Item = ({ task }) => {
                   onClick={handleEditOpenModal}
                 />
               </button>
-              <button>
+              <button onClick={handleDeleteItem}>
                 <FaTrash className="" />
               </button>
             </div>

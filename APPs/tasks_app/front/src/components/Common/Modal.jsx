@@ -111,7 +111,7 @@ const Modal = () => {
     }
 
     // console.log(formData);
-    console.log(modalType);
+    // console.log(modalType);
 
     try {
       if (modalType === 'create' && task === null) {
