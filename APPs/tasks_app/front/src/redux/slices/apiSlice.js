@@ -3,8 +3,14 @@ import {
   GET_TASKS_API_URL,
   POST_TASK_API_URL,
   UPDATE_COMPLETED_TASK_API_URL,
+  UPDATE_TASK_API_URL,
 } from '../../utils/apiUrl';
-import { getRequest, patchRequest, postRequest } from '../../utils/requests';
+import {
+  getRequest,
+  patchRequest,
+  postRequest,
+  putRequest,
+} from '../../utils/requests';
 
 const getItemsFetchThunk = (actionType, apiUrl) => {
   return createAsyncThunk(actionType, async (userId) => {
@@ -23,13 +29,28 @@ const updateCompletedFetchThunk = (actionType, apiUrl) => {
 
 const postItemFetchThunk = (actionType, apiUrl) => {
   return createAsyncThunk(actionType, async (postData) => {
-    // console.log(postData)
+    // console.log(postData);
     const options = {
       body: JSON.stringify(postData),
     };
     return await postRequest(apiUrl, options);
   });
 };
+
+const putItemFetchThunk = (actionType, apiUrl) => {
+  return createAsyncThunk(actionType, async (updateData) => {
+    // console.log(updateData);
+    const options = {
+      body: JSON.stringify(updateData),
+    };
+    return await putRequest(apiUrl, options);
+  });
+};
+
+export const fetchPutItem = putItemFetchThunk(
+  'fetchPutItem',
+  UPDATE_TASK_API_URL
+);
 
 export const fetchPostItem = postItemFetchThunk(
   'fetchPostItem',
@@ -60,6 +81,7 @@ const apiSlice = createSlice({
     getItemsData: null,
     updateCompletedData: null,
     postItemData: null,
+    putItemData: null,
   },
   extraReducers: (builder) => {
     builder
@@ -71,7 +93,9 @@ const apiSlice = createSlice({
       )
       .addCase(fetchUpdateCompleted.rejected, handleRejected)
       .addCase(fetchPostItem.fulfilled, handleFulfilled('postItemData'))
-      .addCase(fetchPostItem.rejected, handleRejected);
+      .addCase(fetchPostItem.rejected, handleRejected)
+      .addCase(fetchPutItem.fulfilled, handleFulfilled('putItemData'))
+      .addCase(fetchPutItem.rejected, handleRejected);
   },
 });
 

@@ -3,7 +3,11 @@ import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal } from '../../redux/slices/modalSlice';
 import { toast } from 'react-toastify';
-import { fetchPostItem } from '../../redux/slices/apiSlice';
+import {
+  fetchGetItems,
+  fetchPostItem,
+  fetchPutItem,
+} from '../../redux/slices/apiSlice';
 
 const Modal = () => {
   const dispatch = useDispatch();
@@ -25,14 +29,25 @@ const Modal = () => {
   });
 
   useEffect(() => {
-    setFormData({
-      title: task?.title,
-      description: task?.description,
-      date: task?.date,
-      isCompleted: task?.iscompleted,
-      isImportant: task?.isimportant,
-      userId: user?.sub,
-    });
+    if ((modalType === 'update' && task) || (modalType === 'details' && task)) {
+      setFormData({
+        title: task.title,
+        description: task.description,
+        date: task.date,
+        isCompleted: task.iscompleted,
+        isImportant: task.isimportant,
+        _id: task._id,
+      });
+    } else if (modalType === 'create' && task === null) {
+      setFormData({
+        title: '',
+        description: '',
+        date: '',
+        isCompleted: false,
+        isImportant: false,
+        userId: user?.sub,
+      });
+    }
   }, [modalType, task, user?.sub]);
 
   // 모달 타입에 따라 모달 내용 변경
@@ -63,8 +78,14 @@ const Modal = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(name, value, type, checked);
+    // console.log(name, value, type, checked);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
+
+  // console.log(formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // 기본 디폴트 기능 방지
@@ -89,13 +110,25 @@ const Modal = () => {
       return;
     }
 
-    // try {
-    //   await dispatch(fetchPostItem(formData)).unwrap();
-    //   toast.success("할일이 추가되었습니다.");
-    // } catch (error) {
-    //   console.log("Error: ", error);
-    //   toast.error("할일을 추가하는데 실패했습니다.");
-    // }
+    // console.log(formData);
+    console.log(modalType);
+
+    try {
+      if (modalType === 'create' && task === null) {
+        await dispatch(fetchPostItem(formData)).unwrap();
+        toast.success('할일이 추가되었습니다.');
+      } else if (modalType === 'update' && task) {
+        await dispatch(fetchPutItem(formData)).unwrap();
+        toast.success('할일이 수정되었습니다.');
+      }
+
+      handleCloseModal();
+
+      await dispatch(fetchGetItems(user?.sub)).unwrap();
+    } catch (error) {
+      console.log('Error: ', error);
+      toast.error('할일을 추가하는데 실패했습니다.');
+    }
   };
   return (
     <div className="modal fixed bg-black bg-opacity-50 flex items-center justify-center w-full h-full left-0 top-0 z-50">
