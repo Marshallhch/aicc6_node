@@ -3,6 +3,7 @@ const database = require('../database/database');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
@@ -61,7 +62,35 @@ exports.login = async (req, res) => {
     const rows = await database.query('SELECT * FROM users WHERE email = $1', [
       email,
     ]);
-    console.log(rows.rows);
+    // console.log(rows.rows);
+
+    if (rows.rows.length === 0) {
+      return res
+        .status(200)
+        .json({ msg: '존재하지 않는 사용자 입니다.', success: false });
+    }
+
+    const isMatch = await bcrypt.compare(password, rows.rows[0].password);
+    // console.log(isMatch);
+
+    if (!isMatch) {
+      return res
+        .stauts(200)
+        .json({ msg: '비밀번호가 일치하지 않습니다.', success: false });
+    }
+
+    const token = jwt.sign(
+      {
+        id: rows.rows[0].id,
+        username: rows.rows[0].username,
+        email: rows.rows[0].email,
+        profile_image: rows.rows[0].profile_image,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '3h' }
+    );
+
+    return res.status(201).json({ token });
   } catch (error) {
     return res.status(500).json({ msg: '로그인 에러: ', error });
   }
